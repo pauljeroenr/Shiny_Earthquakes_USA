@@ -22,7 +22,7 @@ ui <- dashboardPage(
                 valueBoxOutput("num1_earthquake", width = 4),
                 valueBoxOutput("strongest1_earthquake", width = 4),
                 valueBoxOutput("last1_update", width = 4),
-                valueBoxOutput("loc1", width = 8))
+                valueBoxOutput("loc1", width = 12))
               ),
       tabItem(tabName = "24h",
               fluidRow(
@@ -30,7 +30,7 @@ ui <- dashboardPage(
                 valueBoxOutput("num24_earthquake", width = 4),
                 valueBoxOutput("strongest24_earthquake", width = 4),
                 valueBoxOutput("last24_update", width = 4),
-                valueBoxOutput("loc24", width = 8))
+                valueBoxOutput("loc24", width = 12))
               )
     )
   )
