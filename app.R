@@ -4,7 +4,7 @@ library("leaflet")
 library("tidyverse")
 library("shinycssloaders")
 #comment out when publishing
-
+ 
 ui <- dashboardPage(
   dashboardHeader(title = "Earthquakes USA"),
   # Two Sidebar Panels for Earthquakes in the last 1 and 24 hour
