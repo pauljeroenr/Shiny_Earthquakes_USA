@@ -2,6 +2,7 @@ library("shinydashboard")
 library("shiny")
 library("leaflet")
 library("tidyverse")
+library("shinycssloaders")
 #comment out when publishing
 #setwd("C:/Users/paul_/OneDrive/Desktop/master/r_scripts")
 ui <- dashboardPage(
@@ -18,18 +19,24 @@ ui <- dashboardPage(
       # Plot of the different Grahpics
       tabItem(tabName = "1h",
               fluidRow(
-                box(leafletOutput("map1"), width = "100%", height = "100%"),
-                valueBoxOutput("num1_earthquake", width = 4),
-                valueBoxOutput("strongest1_earthquake", width = 4),
+                box(withSpinner(leafletOutput("map1", height = "65vh")), height = "70vh", width = "100%"),
+                absolutePanel(bottom = 0, left = 250, width = 500, height = 500, draggable = TRUE,
+                              valueBoxOutput("num1_earthquake"),
+                              valueBoxOutput("strongest1_earthquake")),
+                #valueBoxOutput("num1_earthquake", width = 4),
+                #valueBoxOutput("strongest1_earthquake", width = 4),
                 valueBoxOutput("last1_update", width = 4),
+                infoBox(title = "Information", value = "There were no Earthquakes when no map renders"),
                 valueBoxOutput("loc1", width = 12))
               ),
       tabItem(tabName = "24h",
               fluidRow(
-                box(leafletOutput("map24"), width = "100%", height = "100%"),
-                valueBoxOutput("num24_earthquake", width = 4),
-                valueBoxOutput("strongest24_earthquake", width = 4),
+                box(withSpinner(leafletOutput("map24", height = "65vh")), height = "70vh", width = "100%"),
+                absolutePanel(bottom = 0, left = 250, width = 500, height = 500, draggable = TRUE,
+                              valueBoxOutput("num24_earthquake"),
+                              valueBoxOutput("strongest24_earthquake")),
                 valueBoxOutput("last24_update", width = 4),
+                infoBox(title = "Information", value = "There were no Earthquakes when no map renders"),
                 valueBoxOutput("loc24", width = 12))
               )
     )
@@ -59,10 +66,14 @@ server <- function(input, output, session) {
   
   # Map with all Earthquakes
   output$map24 <- renderLeaflet({
-    leaflet() %>% 
-    addTiles() %>% 
-    addCircles(lng = unlist(day_earthquake()$value$lng), 
-               lat = unlist(day_earthquake()$value$lat))
+    leaflet(data = day_earthquake()$value) %>% 
+    addProviderTiles(providers$Stamen.TonerLite) %>% 
+    addCircles(lng = ~lng, 
+               lat = ~lat,
+               radius = ~mag * 30000, #radius in meter magnitude between 0-9 
+               stroke = FALSE,
+               color = "darkred",
+               fillOpacity = 0.5)
   })
   # Valuebox with the number of Earthquakes
   output$num24_earthquake <- renderValueBox({
@@ -109,10 +120,14 @@ server <- function(input, output, session) {
   
   # Map with all Earthquakes
   output$map1 <- renderLeaflet({
-    leaflet() %>% 
-      addTiles() %>% 
-      addCircles(lng = unlist(hour_earthquake()$value$lng), 
-                 lat = unlist(hour_earthquake()$value$lat))
+    leaflet(data = hour_earthquake()$value) %>% 
+      addProviderTiles(providers$Stamen.TonerLite) %>% 
+      addCircles(lng = ~lng, 
+                 lat = ~lat,
+                 radius = ~mag * 30000, #radius in meter magnitude between 0-9 
+                 stroke = FALSE,
+                 color = "darkred",
+                 fillOpacity = 0.5)
   })
   # Valuebox with the number of Earthquakes
   output$num1_earthquake <- renderInfoBox({
